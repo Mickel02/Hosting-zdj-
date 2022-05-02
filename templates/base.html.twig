@@ -5,6 +5,7 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css')}}">
+            <link rel="stylesheet" href="{{ asset('assets/css/simpleLightbox.min.css')}}">
         {% endblock %}
     </head>
     <body>
@@ -58,6 +59,8 @@
             <script src="{{ asset('assets/js/bootstrap.min.js')}}"></script>
             <script src="{{ asset('assets/js/jquery-3.4.1.slim.min.js')}}"></script>
             <script src="{{ asset('assets/js/popper.min.js')}}"></script>
+            <script src="{{ asset('assets/js/simpleLightbox.min.js')}}"></script>
+            <script src="{{ asset('assets/js/scripts.js')}}"></script>
         {% endblock %}
     </body>
 </html>
