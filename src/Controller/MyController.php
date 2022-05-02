@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Photo;
+use App\Service\PhotoVisibilityService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
@@ -29,57 +30,24 @@ class MyController extends AbstractController
     }
 
     /**
-     * @Route("/my/photos/set_private/{id}", name="my_photos_set_as_private")
+     * @Route("/my/photos/set_visibility/{id}/{visibility}", name="my_photos_set_visibility")
+     * @param PhotoVisibilityService $photoVisibilityService
      * @param int $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @param bool $visibility
      */
-    public function myPhotoSetAsPrivate(int $id)
+    public function myPhotosSetVisibility(PhotoVisibilityService $photoVisibilityService, int $id, bool $visibility)
     {
-        $em = $this->getDoctrine()->getManager();
-        $myPhoto = $em->getRepository(Photo::class)->find($id);
-
-        if ($this->getUser() == $myPhoto->getUser())
+        $messages = [
+            '1' => 'publiczne',
+            '0' => 'prywatne'
+        ];
+        if ($photoVisibilityService->makeVisible($id,$visibility))
         {
-            try {
-                $myPhoto->setIsPublic(0);
-                $em->persist($myPhoto);
-                $em->flush();
-                $this->addFlash('success', 'Ustawiono jako prywatne');
-            } catch (\Exception $e){
-                $this->addFlash('error', 'Występił problem przy ustawianiu jako prywatne');
-            }
-        } else {
-            $this->addFlash('error', 'Nie jesteś właścicilem tego zdjęcia');
+            $this->addFlash('success', 'Ustawiono jako '.$messages[$visibility].'.');
         }
+        else  $this->addFlash('error', 'Wystąpił problem przy ustawianiu jako '.$messages[$visibility].'.');
+
         return $this->redirectToRoute('my_photos');
-
-    }
-
-    /**
-     * @Route("/my/photos/set_public/{id}", name="my_photos_set_as_public")
-     * @param int $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function myPhotoSetAsPublic(int $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $myPhoto = $em->getRepository(Photo::class)->find($id);
-
-        if ($this->getUser() == $myPhoto->getUser())
-        {
-            try {
-                $myPhoto->setIsPublic(1);
-                $em->persist($myPhoto);
-                $em->flush();
-                $this->addFlash('success', 'Ustawiono jako publiczne');
-            } catch (\Exception $e){
-                $this->addFlash('error', 'Występił problem przy ustawianiu jako publiczne');
-            }
-        } else {
-            $this->addFlash('error', 'Nie jesteś właścicilem tego zdjęcia');
-        }
-        return $this->redirectToRoute('my_photos');
-
     }
 
     /**
