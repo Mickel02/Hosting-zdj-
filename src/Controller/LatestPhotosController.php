@@ -14,7 +14,7 @@ class LatestPhotosController extends AbstractController
     public function index()
     {
         $em = $this->getDoctrine()->getManager();
-        $latestPhotosPublic = $em->getRepository(Photo::class)->findBy(['is_public' => true]);
+        $latestPhotosPublic = $em->getRepository(Photo::class)->findAllPublic();
 
         return $this->render('latest_photos/index.html.twig', [
             'latestPhotoPublic' => $latestPhotosPublic

@@ -45,32 +45,23 @@ class PhotoRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Photo[] Returns an array of Photo objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+    public function findAllPublic(){
+        return $this->createQueryBuilder('photo')
+            ->where('photo.is_public = 1')
+            ->orderBy('photo.uploaded_at', 'DESC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
     /*
-    public function findOneBySomeField($value): ?Photo
+    public function findAllLatest()
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('photo')
+            ->where('photo.is_public = 1')
+            ->andWhere('photo.uploaded_at < 7')
+            ->orderBy('photo.uploaded_at', "DESC")
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
     */
 }
